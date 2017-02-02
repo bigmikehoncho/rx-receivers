@@ -14,10 +14,6 @@ import rx.functions.Func1;
 
 import static com.f2prateek.rx.receivers.internal.Preconditions.checkNotNull;
 
-/**
- * Created by michael on 1/31/2017.
- */
-
 public class RxBluetoothStateManager {
 
     private RxBluetoothStateManager() {
@@ -26,13 +22,13 @@ public class RxBluetoothStateManager {
 
     @CheckResult
     @NonNull //
-    public static Observable<Integer> bluetoothStateChanges(@NonNull final Context context) {
+    public static Observable<BluetoothState> bluetoothStateChanges(@NonNull final Context context) {
         checkNotNull(context, "context == null");
         IntentFilter filter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
-        return RxBroadcastReceiver.create(context, filter).map(new Func1<Intent, Integer>() {
-            @Override public Integer call(Intent intent) {
-                return intent.getIntExtra(BluetoothAdapter.EXTRA_STATE,
-                        BluetoothAdapter.ERROR);
+        return RxBroadcastReceiver.create(context, filter).map(new Func1<Intent, BluetoothState>() {
+            @Override public BluetoothState call(Intent intent) {
+                return BluetoothState.of(intent.getIntExtra(BluetoothAdapter.EXTRA_STATE,
+                        BluetoothAdapter.ERROR));
             }
         });
     }
